@@ -299,13 +299,19 @@ open class PieChartRenderer: DataRenderer
 
         var labelRadiusOffset = radius / 10.0 * 3.0
 
+      
+        
         if chart.drawHoleEnabled
         {
             labelRadiusOffset = (radius - (radius * chart.holeRadiusPercent)) / 2.0
+            
         }
 
         let labelRadius = radius - labelRadiusOffset
 
+        let innerLabelRadius = radius * chart.holeRadiusPercent - labelRadiusOffset
+        
+        
         var dataSets = data.dataSets
 
         let yValueSum = (data as! PieChartData).yValueSum
@@ -338,6 +344,11 @@ open class PieChartRenderer: DataRenderer
             let yValuePosition = dataSet.yValuePosition
 
             let valueFont = dataSet.valueFont
+            let selectedValueFont = dataSet.selectedValueFont
+            let selectedValueOutsideColor = dataSet.selectedValueOutsideColor
+            
+           
+            
             let entryLabelFont = dataSet.entryLabelFont
             let lineHeight = valueFont.lineHeight
 
@@ -511,6 +522,11 @@ open class PieChartRenderer: DataRenderer
                     let x = labelRadius * sliceXBase + center.x
                     let y = labelRadius * sliceYBase + center.y - lineHeight
 
+                    let iX = innerLabelRadius * sliceXBase + center.x
+                    let iY = innerLabelRadius * sliceYBase + center.y - lineHeight
+
+                    
+                    
                     if drawXInside && drawYInside
                     {
                         ChartUtils.drawText(
@@ -551,13 +567,60 @@ open class PieChartRenderer: DataRenderer
                     }
                     else if drawYInside
                     {
-                        ChartUtils.drawText(
-                            context: context,
-                            text: valueText,
-                            point: CGPoint(x: x, y: y + lineHeight / 2.0),
-                            align: .center,
-                            attributes: [NSAttributedString.Key.font: valueFont, NSAttributedString.Key.foregroundColor: valueTextColor]
-                        )
+                        
+                        if chart.highlighted.count == 0 {
+                            if value > 10  {
+                                
+                                ChartUtils.drawText(
+                                    context: context,
+                                    text: valueText,
+                                    point: CGPoint(x: x, y: y + lineHeight / 2.0),
+                                    align: .center,
+                                    attributes: [NSAttributedString.Key.font: valueFont, NSAttributedString.Key.foregroundColor: valueTextColor]
+                                )
+                                
+                            }
+                        }else{
+                              let h = chart.highlighted[0]
+                            
+                            if value > 10 && Int(h.x) != j {
+                                
+                                ChartUtils.drawText(
+                                    context: context,
+                                    text: valueText,
+                                    point: CGPoint(x: x, y: y + lineHeight / 2.0),
+                                    align: .center,
+                                    attributes: [NSAttributedString.Key.font: valueFont, NSAttributedString.Key.foregroundColor: valueTextColor]
+                                )
+                            }else if Int(h.x) == j{
+                                
+                                if value > 10 {
+                                    
+                                    ChartUtils.drawText(
+                                        context: context,
+                                        text: valueText,
+                                        point: CGPoint(x: x, y: y + lineHeight / 2.0),
+                                        align: .center,
+                                        attributes: [NSAttributedString.Key.font: selectedValueFont!, NSAttributedString.Key.foregroundColor: valueTextColor]
+                                    )
+                                }else{
+                                    
+                                    ChartUtils.drawText(
+                                        context: context,
+                                        text: valueText,
+                                        point: CGPoint(x: iX, y: iY + lineHeight / 2.0),
+                                        align: .center,
+                                        attributes: [NSAttributedString.Key.font: selectedValueFont!, NSAttributedString.Key.foregroundColor: selectedValueOutsideColor!]
+                                    )
+                                    
+                                }
+                                
+                            }
+                        }
+                            
+                     
+                       
+                      
                     }
                 }
 

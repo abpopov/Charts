@@ -108,6 +108,12 @@ open class PieChartDataSet: ChartDataSet, IPieChartDataSet
     /// the color for the slice-text labels
     open var entryLabelColor: NSUIColor? = nil
 
+    /// the font for the slice-text labels
+    open var selectedValueFont: NSUIFont? = nil
+    
+    /// the color for the slice-text labels
+    open var selectedValueOutsideColor: NSUIColor? = nil
+    
     /// the color for the highlighted sector
     open var highlightColor: NSUIColor? = nil
 

@@ -60,5 +60,10 @@ public protocol IPieChartDataSet: IChartDataSet
 
     /// get/sets the color for the highlighted sector
     var highlightColor: NSUIColor? { get set }
+    
+    var selectedValueFont: NSUIFont? { get set }
+    
+    var selectedValueOutsideColor: NSUIColor? { get set }
+    
 
 }
