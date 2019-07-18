@@ -98,7 +98,11 @@ open class XAxisRenderer: AxisRendererBase
         }
         else if xAxis.labelPosition == .bottom
         {
-            drawLabels(context: context, pos: viewPortHandler.contentBottom + yOffset, anchor: CGPoint(x: 0.5, y: 0.0))
+           
+                 drawLabels(context: context, pos: viewPortHandler.contentBottom + yOffset, anchor: CGPoint(x: 0.5, y: 0.0))
+        
+            
+           
         }
         else if xAxis.labelPosition == .bottomInside
         {
@@ -168,8 +172,10 @@ open class XAxisRenderer: AxisRendererBase
             let transformer = self.transformer
             else { return }
         
+        
+        
         let paraStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        paraStyle.alignment = .center
+        paraStyle.alignment = xAxis.labelTextAlignment
         
         let labelAttrs: [NSAttributedString.Key : Any] = [
             .font: xAxis.labelFont,
@@ -195,6 +201,9 @@ open class XAxisRenderer: AxisRendererBase
         
         for i in stride(from: 0, to: entries.count, by: 1)
         {
+            
+            var anchor = anchor
+            
             if centeringEnabled
             {
                 position.x = CGFloat(xAxis.centeredEntries[i])
@@ -212,12 +221,43 @@ open class XAxisRenderer: AxisRendererBase
                 let label = xAxis.valueFormatter?.stringForValue(xAxis.entries[i], axis: xAxis) ?? ""
 
                 let labelns = label as NSString
-                
+                if !xAxis.isLabelCentered {
+                    
+                    if i == xAxis.entryCount - 1 && xAxis.entryCount > 1
+                    {
+                        
+                        if !xAxis.drawLastLabel {
+                           continue
+                        }
+                            
+                        anchor.x = 1
+                        
+                    }else if i == 0{
+                      
+                        anchor.x = 0
+                        
+                    }else{
+                        
+                        if !xAxis.isInnerLabelsCentered{
+                            
+                            anchor.x = 0
+                        }
+                        
+                    }
+                   
+                    
+                    
+                } else {
                 if xAxis.isAvoidFirstLastClippingEnabled
                 {
                     // avoid clipping of the last
                     if i == xAxis.entryCount - 1 && xAxis.entryCount > 1
                     {
+                        
+                        
+                        
+                     
+                        
                         let width = labelns.boundingRect(with: labelMaxSize, options: .usesLineFragmentOrigin, attributes: labelAttrs, context: nil).size.width
                         
                         if width > viewPortHandler.offsetRight * 2.0
@@ -225,13 +265,19 @@ open class XAxisRenderer: AxisRendererBase
                         {
                             position.x -= width / 2.0
                         }
+                        
+                      
                     }
                     else if i == 0
                     { // avoid clipping of the first
+                        
+                        
                         let width = labelns.boundingRect(with: labelMaxSize, options: .usesLineFragmentOrigin, attributes: labelAttrs, context: nil).size.width
-                        position.x += width / 2.0
+                            position.x += width / 2.0
+                        
+                    
                     }
-                }
+                }}
                 
                 drawLabel(context: context,
                           formattedLabel: label,
@@ -427,8 +473,29 @@ open class XAxisRenderer: AxisRendererBase
                 y: viewPortHandler.contentBottom - labelLineHeight - yOffset
             )
             align = .right
+        
+        case .leftCenter:
+            point = CGPoint(
+                x: position.x - xOffset,
+                y: viewPortHandler.contentBottom - labelLineHeight - yOffset
+            )
+            align = .right
+        
+        case .topCenter:
+            point = CGPoint(
+                x: position.x ,
+                y: viewPortHandler.contentTop - labelLineHeight - yOffset
+            )
+            align = .center
+        case .rightCenter:
+            point = CGPoint(
+                x: position.x + xOffset,
+                y: viewPortHandler.contentTop + yOffset
+            )
+            align = .left
         }
 
+        context.resetClip()
         ChartUtils.drawText(
             context: context,
             text: label,
@@ -436,5 +503,6 @@ open class XAxisRenderer: AxisRendererBase
             align: align,
             attributes: attributes
         )
+        context.clip()
     }
 }

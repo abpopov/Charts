@@ -625,6 +625,14 @@ open class LineChartRenderer: LineRadarRenderer
                 {
                     continue
                 }
+                
+                if dataSet.drawCirclesValues != nil && dataSet.drawCirclesValues!.count > 0 {
+                    
+                    if !dataSet.drawCirclesValues!.contains(e.x){
+                        continue
+                    }
+                    
+                }
 
                 context.setFillColor(dataSet.getCircleColor(atIndex: j)!.cgColor)
 
@@ -726,7 +734,7 @@ open class LineChartRenderer: LineRadarRenderer
             high.setDraw(pt: pt)
             
             // draw the lines
-            drawHighlightLines(context: context, point: pt, set: set)
+            drawHighlightLines(context: context, point: pt, set: set, drawGradient: set.highlightGradientVertical)
         }
         
         context.restoreGState()

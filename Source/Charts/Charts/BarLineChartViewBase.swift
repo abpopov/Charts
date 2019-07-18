@@ -30,6 +30,11 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
     private var _scaleXEnabled = true
     private var _scaleYEnabled = true
     
+    
+    var timer:Timer? = nil
+    var isHLEnabled:Bool = false
+    
+    
     /// the color for the background of the chart-drawing area (everything behind the grid lines).
     @objc open var gridBackgroundColor = NSUIColor(red: 240/255.0, green: 240/255.0, blue: 240/255.0, alpha: 1.0)
     
@@ -507,7 +512,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         case x
         case y
     }
-    
+    private var _isDraggingToHighlight = false
     private var _isDragging = false
     private var _isScaling = false
     private var _gestureScaleAxis = GestureScaleAxis.both
@@ -520,6 +525,88 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
     private var _decelerationLastTime: TimeInterval = 0.0
     private var _decelerationDisplayLink: NSUIDisplayLink!
     private var _decelerationVelocity = CGPoint()
+    
+    
+    
+    
+    open override func nsuiTouchesEnded(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?) {
+        if !_isDraggingToHighlight {
+            
+            isHLEnabled = false
+            timer?.invalidate()
+            timer  = nil
+            delegate?.chartViewDidEndPanning?(self)
+            
+            
+        }
+    }
+    
+    
+    open override func nsuiTouchesCancelled(_ touches: Set<NSUITouch>?, withEvent event: NSUIEvent?) {
+        
+        if !_isDraggingToHighlight {
+            isHLEnabled = false
+            timer?.invalidate()
+            timer = nil
+        delegate?.chartViewDidEndPanning?(self)
+            
+            
+        }
+        // print("cancel")
+    }
+    open override func nsuiTouchesBegan(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?) {
+        
+        
+        stopDeceleration()
+        
+        if _data === nil || !self.isDragEnabled || !self.highlightPerDragEnabled
+        { // If we have no data, we have nothing to pan and no data to highlight
+            return
+        }
+        
+        let touch = touches.first
+        
+        guard let location = (touch?.location(in: self)) else{
+            return
+        }
+        
+        let h = getHighlightByTouchPoint(location)
+        
+        let lastHighlighted = self.lastHighlighted
+        
+        if h != lastHighlighted
+        {
+            self.lastHighlighted = h
+            if isHLEnabled {
+        
+                self.highlightValue(h, callDelegate: true)
+                
+            }else {
+                
+                if timer == nil {
+                    
+                    if #available(iOS 10.0, *) {
+                        self.timer =   Timer.scheduledTimer(withTimeInterval: 0.3,
+                                                            repeats: false) {
+                                                                timer in
+                                                                //Put the code that be called by the timer here.
+                                                                
+                                                                
+                                                                self.isHLEnabled = true
+                                                                self.highlightValue(h, callDelegate: true)
+                                                                
+                                                                
+                                                                // timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(disableScroll), userInfo: nil, repeats: false)
+                        }
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                }
+            }
+        }
+        
+        
+    }
     
     @objc private func tapGestureRecognized(_ recognizer: NSUITapGestureRecognizer)
     {
@@ -728,6 +815,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 // We will only handle highlights on NSUIGestureRecognizerState.Changed
                 
                 _isDragging = false
+                _isDraggingToHighlight = true
             }
         }
         else if recognizer.state == NSUIGestureRecognizerState.changed
@@ -759,7 +847,8 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 if h != lastHighlighted
                 {
                     self.lastHighlighted = h
-                    self.highlightValue(h, callDelegate: true)
+                    if self.isHLEnabled {
+                    self.highlightValue(h, callDelegate: true)}
                 }
             }
         }
@@ -786,6 +875,10 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 _outerScrollView?.nsuiIsScrollEnabled = true
                 _outerScrollView = nil
             }
+            _isDraggingToHighlight = false
+            isHLEnabled = false
+            timer?.invalidate()
+            timer  = nil
             
             delegate?.chartViewDidEndPanning?(self)
         }

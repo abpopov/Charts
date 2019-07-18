@@ -15,6 +15,12 @@ import CoreGraphics
 
 open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
 {
+    public var drawCirclesValues: [Double]?
+    
+    public var positiveDotColor: UIColor?
+    public var negativeDotColor: UIColor?
+    public var dotLineValue:Double?
+    
     @objc(LineChartMode)
     public enum Mode: Int
     {
@@ -53,6 +59,8 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
     
     private var _cubicIntensity = CGFloat(0.2)
     
+    private var _highlightGradientVertical:[UIColor]? = nil
+    
     /// Intensity for cubic lines (min = 0.05, max = 1)
     ///
     /// **default**: 0.2
@@ -65,6 +73,18 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
         set
         {
             _cubicIntensity = newValue.clamped(to: 0.05...1)
+        }
+    }
+    
+    override public var highlightGradientVertical: [UIColor]? {
+        
+        get
+        {
+            return _highlightGradientVertical
+        }
+        set
+        {
+            _highlightGradientVertical = newValue
         }
     }
         
@@ -80,6 +100,16 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
     /// Performs a IndexOutOfBounds check by modulus.
     open func getCircleColor(atIndex index: Int) -> NSUIColor?
     {
+        if dotLineValue != nil && negativeDotColor != nil && positiveDotColor != nil {
+            
+            if   self.entries[index].y > dotLineValue! {
+                return positiveDotColor
+            }else{
+                return negativeDotColor
+            }
+            
+        }
+        
         let size = circleColors.count
         let index = index % size
         if index >= size

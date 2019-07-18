@@ -867,8 +867,8 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 contentPath.fill()
                 context.resetClip()
                 
-                
-                
+                if barRect.height > 4 {
+              
                 ///
                 let colors = [UIColor(red:  230/255, green: 234/255, blue: 246/255, alpha: 0).cgColor, UIColor(red:  230/255, green: 234/255, blue: 246/255, alpha: 1).cgColor, ];
                 
@@ -895,7 +895,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 
                 context.resetClip()
                 
-                
+                }
                 
                 
             }

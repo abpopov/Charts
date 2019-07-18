@@ -15,6 +15,8 @@ import CoreGraphics
 
 open class BarLineScatterCandleBubbleChartDataSet: ChartDataSet, IBarLineScatterCandleBubbleChartDataSet
 {
+    public var highlightGradientVertical: [UIColor]?
+    
     // MARK: - Data functions and accessors
     
     // MARK: - Styling functions and accessors

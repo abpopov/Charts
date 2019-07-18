@@ -23,6 +23,7 @@ open class XAxis: AxisBase
         case bothSided
         case topInside
         case bottomInside
+        case bottomLeftAligment
     }
     
     /// width of the x-axis labels in pixels - this is automatically calculated by the `computeSize()` methods in the renderers
@@ -42,6 +43,12 @@ open class XAxis: AxisBase
 
     /// if set to true, the chart will avoid that the first and last label entry in the chart "clip" off the edge of the chart
     @objc open var avoidFirstLastClippingEnabled = false
+    
+    @objc open var drawLastLabel = true
+    @objc open var isLabelCentered = true
+    @objc open var isInnerLabelsCentered = true
+    
+    
     
     /// the position of the x-labels relative to the chart
     @objc open var labelPosition = LabelPosition.top
