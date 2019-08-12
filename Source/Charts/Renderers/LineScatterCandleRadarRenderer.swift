@@ -33,27 +33,27 @@ open class LineScatterCandleRadarRenderer: BarLineScatterCandleBubbleRenderer
         {
             
             if drawGradient == nil {
-            context.beginPath()
-            context.move(to: CGPoint(x: point.x, y: viewPortHandler.contentTop))
-            context.addLine(to: CGPoint(x: point.x, y: viewPortHandler.contentBottom))
-            context.strokePath()
+                context.beginPath()
+                context.move(to: CGPoint(x: point.x, y: viewPortHandler.contentTop))
+                context.addLine(to: CGPoint(x: point.x, y: viewPortHandler.contentBottom))
+                context.strokePath()
             }
             else{
                 
-                let gradientColors3 = [drawGradient![0].cgColor, drawGradient![1].cgColor];
+                let gradientColors = [drawGradient![0].cgColor, drawGradient![1].cgColor];
                 
-                let colorSpace3 = CGColorSpaceCreateDeviceRGB()
+                let colorSpace = CGColorSpaceCreateDeviceRGB()
                 
-                let colorLocations3: [CGFloat] = [0.0, 1.0]
-                let gradient3 = CGGradient(colorsSpace: colorSpace3,
-                                           colors: gradientColors3 as CFArray,
-                                           locations: colorLocations3)!
+                let colorLocations: [CGFloat] = [0.0, 1.0]
+                let gradient = CGGradient(colorsSpace: colorSpace,
+                                           colors: gradientColors as CFArray,
+                                           locations: colorLocations)!
                 
                 
                 context.addRect(CGRect.init(x: point.x, y: viewPortHandler.contentTop, width: 1, height: viewPortHandler.contentBottom  - viewPortHandler.contentTop))
                 
                 context.clip()
-                context.drawLinearGradient(gradient3, start: CGPoint(x: point.x, y: viewPortHandler.contentTop), end: CGPoint(x: point.x, y: viewPortHandler.contentBottom), options: [])
+                context.drawLinearGradient(gradient, start: CGPoint(x: point.x, y: viewPortHandler.contentTop), end: CGPoint(x: point.x, y: viewPortHandler.contentBottom), options: [])
                context.resetClip()
                 
             }

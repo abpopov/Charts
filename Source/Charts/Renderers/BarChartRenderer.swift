@@ -424,8 +424,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 context.setFillColor(dataSet.color(atIndex: j).cgColor)
             }
             
-            //context.fill(barRect)
-           
+    
             
             
             let gradientColors = [UIColor(red:  230/255, green: 234/255, blue: 246/255, alpha: 1).cgColor, UIColor(red:  230/255, green: 234/255, blue: 246/255, alpha: 1).cgColor];
@@ -869,16 +868,12 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 
                 if barRect.height > 4 {
               
-                ///
                 let colors = [UIColor(red:  230/255, green: 234/255, blue: 246/255, alpha: 0).cgColor, UIColor(red:  230/255, green: 234/255, blue: 246/255, alpha: 1).cgColor, ];
-                
-                // 3
+        
                 let colorSpace = CGColorSpaceCreateDeviceRGB()
                 
-                // 4
                 let colorLocations: [CGFloat] = [0.0, 1.0]
                 
-                // 5
                 let gradient = CGGradient(colorsSpace: colorSpace,
                                           colors: colors as CFArray,
                                           locations: colorLocations)!

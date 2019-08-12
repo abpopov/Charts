@@ -1039,31 +1039,31 @@ open class PieChartRenderer: DataRenderer
             context.beginPath()
             
             
+            let colorSpace = CGColorSpaceCreateDeviceRGB()
             
             
-            let gradientColors3 = [UIColor.white.withAlphaComponent(1).cgColor, UIColor.white.withAlphaComponent(0).cgColor];
-            
-            let colorSpace3 = CGColorSpaceCreateDeviceRGB()
-            
-            let colorLocations3: [CGFloat] = [0.0, 1.0]
-            let gradient3 = CGGradient(colorsSpace: colorSpace3,
-                                       colors: gradientColors3 as CFArray,
-                                       locations: colorLocations3)!
+            let innenHighliteGradientColors = [UIColor.white.withAlphaComponent(1).cgColor, UIColor.white.withAlphaComponent(0).cgColor];
             
             
-            let box3 = path.boundingBox
+            let innenHighliteColorLocations: [CGFloat] = [0.0, 1.0]
+            let innenHighliteGradient = CGGradient(colorsSpace: colorSpace,
+                                       colors: innenHighliteGradientColors as CFArray,
+                                       locations: innenHighliteColorLocations)!
+            
+            
+            let innenHighliteBox = path.boundingBox
             
             
             
-            let startPoint3 = CGPoint(x: box3.minX, y: box3.minY)
-            let endPoint3 = CGPoint(x: box3.maxX, y: box3.maxY)
+            let innenHighliteStartPoint = CGPoint(x: innenHighliteBox.minX, y: innenHighliteBox.minY)
+            let innenHighliteEndPoint = CGPoint(x: innenHighliteBox.maxX, y: innenHighliteBox.maxY)
             
             
             
             context.addPath(path)
             
             context.clip()
-            context.drawLinearGradient(gradient3, start: startPoint3, end: endPoint3, options: [])
+            context.drawLinearGradient(innenHighliteGradient, start: innenHighliteStartPoint, end: innenHighliteEndPoint, options: [])
             
             context.resetClip()
             
@@ -1075,22 +1075,20 @@ open class PieChartRenderer: DataRenderer
             
             
             
-            let gradientColors = [UIColor.white.withAlphaComponent(1).cgColor, UIColor.white.withAlphaComponent(0).cgColor];
+            let borderGradientColors = [UIColor.white.withAlphaComponent(1).cgColor, UIColor.white.withAlphaComponent(0).cgColor];
             
-            let colorSpace2 = CGColorSpaceCreateDeviceRGB()
-            
-            let colorLocations2: [CGFloat] = [0.0, 1.0]
-            let gradient2 = CGGradient(colorsSpace: colorSpace2,
-                                       colors: gradientColors as CFArray,
-                                       locations: colorLocations2)!
+            let borderColorLocations: [CGFloat] = [0.0, 1.0]
+            let borderGradient = CGGradient(colorsSpace: colorSpace,
+                                       colors: borderGradientColors as CFArray,
+                                       locations: borderColorLocations)!
             
             
-            let box = borderPath.boundingBox
+            let borderBox = borderPath.boundingBox
             
             
             
-            let startPoint2 = CGPoint(x: box.minX, y: box.minY)
-            let endPoint2 = CGPoint(x: box.maxX, y: box.maxY)
+            let borderStartPoint = CGPoint(x: borderBox.minX, y: borderBox.minY)
+            let borderEndPoint = CGPoint(x: borderBox.maxX, y: borderBox.maxY)
             
             
             
@@ -1098,7 +1096,7 @@ open class PieChartRenderer: DataRenderer
             
             
             context.clip()
-            context.drawLinearGradient(gradient2, start: startPoint2, end: endPoint2, options: [])
+            context.drawLinearGradient(borderGradient, start: borderStartPoint, end: borderEndPoint, options: [])
             
             context.resetClip()
             

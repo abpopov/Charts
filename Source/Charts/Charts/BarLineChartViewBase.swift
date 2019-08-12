@@ -596,10 +596,9 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                                                                 self.highlightValue(h, callDelegate: true)
                                                                 
                                                                 
-                                                                // timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(disableScroll), userInfo: nil, repeats: false)
-                        }
+                                                                     }
                     } else {
-                        // Fallback on earlier versions
+                
                     }
                 }
             }
